@@ -1,0 +1,5 @@
+PORT=3001
+DB_HOST=localhost
+DB_USER=your_user
+DB_PASS=your_pass
+DB_SCHEMA=library

@@ -1,0 +1,37 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+img {
+    max-width: 625px;
+    max-height: 360px;
+}
+
+.detail-container {
+    padding: 1%;
+    width: 100%;
+}
+
+.form {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cover-image-outside-container {
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    margin-left: 2%;
+}
+
+.cover-image-container {
+    text-align: center;
+}

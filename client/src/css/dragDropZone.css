@@ -1,0 +1,27 @@
+.container {
+    z-index: -1;
+}
+
+.dropzone {
+    width: 100%;
+    padding: 15px;
+}
+
+.dropzone-input {
+
+}
+
+.btn-container {
+    margin-right: 3%;
+    text-align: right;
+}
+
+.dropzone-text {
+    border: 2px dashed #bbb;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 50px;
+    text-align: center;
+    font: 21pt bold arial;
+    color: #bbb;
+}

@@ -1,0 +1,17 @@
+.logo-containter {
+    display: flex;
+}
+
+.logo-title {
+    margin-left: 10px;
+    margin-top: 15px;
+    font-size: 18px;
+    line-height: 5px;
+}
+
+.add-btn {
+}
+
+.header {
+    margin-bottom: 1%;
+}
