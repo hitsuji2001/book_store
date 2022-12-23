@@ -1,6 +1,6 @@
 // https://react-dropzone.js.org/#!/Previews
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import '../css/dragDropZone.css';
@@ -15,7 +15,6 @@ const thumb = {
     display: 'inline-flex',
     borderRadius: 2,
     border: '1px solid #eaeaea',
-    // marginTop: "-210px",
     marginBottom: 8,
     marginRight: 8,
     maxWidth: '100',
@@ -33,12 +32,10 @@ const img = {
     height: '100%'
 };
 
-
 function DragDropZone({files, setFiles}) {
     let previewImage = useRef(null);
     let dropZoneDiv  = useRef(null);
 
-    // const [ files, setFiles ] = useState([]);
     const { getRootProps, getInputProps } = useDropzone({
 	accept: {
 	    'image/*': []
@@ -78,7 +75,6 @@ function DragDropZone({files, setFiles}) {
 	    <aside style={thumbsContainer} >
 		{thumbs}
 	    </aside>
-
 	</section>
     );
 }

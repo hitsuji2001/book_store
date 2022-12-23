@@ -1,13 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from "react-hook-form";
+import { Form } from 'semantic-ui-react';
 import DragDropZone from './dragDropZone.jsx';
 import '../css/bookDetails.css';
 
-export default function BookDetails (props) {
+export default function BookDetails(props) {
     const [ book, setBook ] = useState({});
     const [ files, setFiles ] = useState([]);
     const navigate = useNavigate();
+    const { register, handleSubmit, formState: { errors } } = useForm();
+
+    const onSubmit = async (data) => {
+	const formData = new FormData();
+	formData.append('book', JSON.stringify(data));
+	formData.append('image', files[0]);
+	setBook(data);
+
+	await fetch(`/api/books/addBook`, { method: 'POST', body: formData })
+	    .then((res) => { res.json() })
+	    .then((res) => { navigate('/') });
+    }
 
     useEffect(() => {
 	if (props.action !== 'add') {
@@ -16,6 +30,7 @@ export default function BookDetails (props) {
 		.then((res) => res.json())
 		.then((data) => {
 		    setBook(data)
+		    console.log('book:', data);
 		})
 		.catch((err) => {
 		    console.error('ERROR in fetching data: ', err.message);
@@ -27,25 +42,6 @@ export default function BookDetails (props) {
 	if (name !== '' && name !== undefined) return `/api/books/getImage/${name}`;
 	else return '../../default-cover.jpg';
     }
-
-    const handleOnChange = (e) => {
-	setBook({
-	    ...book,
-	    [e.target.name]: e.target.value
-	});
-    }
-
-    const handleSubmit = async (event) => {
-	event.preventDefault();
-	const data = new FormData();
-	data.append('book', JSON.stringify(book));
-	data.append('image', files[0]);
-
-	await fetch(`/api/books/addBook`, { method: 'POST', body: data })
-	    .then((res) => {res.json()})
-	    .then((res) => { navigate('/') });
-    }
-
     
     let actionButton;
     let coverImage;
@@ -75,38 +71,44 @@ export default function BookDetails (props) {
 
     return (
 	<div className="detail-container">
-	    <form className="form" onSubmit={ handleSubmit }>
+	    <Form className="form" onSubmit={ handleSubmit(onSubmit) }>
 		<div className="form-container">
-		    <div className="input-group mb-3">
+		 
+		    <Form.Field className="input-group mb-3">
 			<div className="input-group-prepend">
 			    <span className="input-group-text">Tên sách</span>
 			</div>
 			<input type="text" className="form-control"
 			       name="title"
 			       value={ book.title }
-			       onChange={ handleOnChange }/>
-		    </div>
+			       {...register("title", { required: true, maxLength: 30 })}
+			/>
+		    </Form.Field>
+		    {errors.title && <p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> Title is required!</p>}
 
-		    <div className="input-group mb-3">
+		    <Form.Field className="input-group mb-3">
 			<div className="input-group-prepend">
 			    <span className="input-group-text">Tác giả</span>
 			</div>
 			<input type="text" className="form-control"
 			       name="author"
 			       value={ book.author }
-			       onChange={ handleOnChange }></input>
-		    </div>
+			       {...register("author", { required: true, maxLength: 20 })}
+			></input>
+		    </Form.Field>
+		    {errors.author && <p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> Author is required!</p>}
 
-		    <div className="input-group mb-3">
+		    <Form.Field className="input-group mb-3">
 			<span className="input-group-text">Mô tả</span>
 			<textarea className="form-control"
 				  rows="5"
 				  name="description"
 				  defaultValue={ book.description }
-				  onChange={ handleOnChange }></textarea>
-		    </div>
+				  {...register("description")}
+				 ></textarea>
+		    </Form.Field>
 
-		    <div className="input-group mb-3">
+		    <Form.Field className="input-group mb-3">
 			<div className="input-group-prepend">
 			    <span className="input-group-text">Ngày phát hành</span>
 			</div>
@@ -114,31 +116,31 @@ export default function BookDetails (props) {
 			       className="form-control"
 			       name="release_date"
 			       value={ book.release_date }
-			       onChange={ handleOnChange }></input>
-		    </div>
+			       {...register("release_date")}
+			></input>
+		    </Form.Field>
 
 		    <div className="d-sm-flex">
-			<div className="input-group mb-3">
+			<Form.Field className="input-group mb-3">
 			    <div className="input-group-prepend">
 				<span className="input-group-text">Số trang</span>
 			    </div>
 			    <input type="number"
 				   className="form-control"
-				   min="0"
 				   name="pages"
 				   value={ book.pages }
-				   onChange={ handleOnChange }></input>
-			</div>
+				   {...register("pages", { min: 0 })}
+			    ></input>
+			</Form.Field>
 
-			<div className="input-group mb-3">
+			<Form.Field className="input-group mb-3">
 			    <div className="input-group-prepend">
 				<span className="input-group-text">Thể loại</span>
 			    </div>
 			    <select value={ book.category }
 				    name="category"
-				    onChange={ handleOnChange }
+				    {...register("category")}
 				    className="form-control">
-				<option value="none">None</option>
 				<option value="law">Chính trị – pháp luật</option>
 				<option value="science">Khoa học công nghệ – Kinh tế</option>
 				<option value="literature">Văn học nghệ thuật</option>
@@ -146,9 +148,12 @@ export default function BookDetails (props) {
 				<option value="novel">Truyện, tiểu thuyết</option>
 				<option value="politic">Tâm lý, tâm linh, tôn giáo</option>
 				<option value="teenage">Thiếu nhi</option>
+				<option value="other">Khác</option>
 			    </select>
-			</div>
+			</Form.Field>
+
 		    </div>
+		    {errors.pages && <p className="error-messages alert alert-danger" role="alert"><i className="fi fi-rr-exclamation"></i> Page count can't be negative</p>}
 		</div>
 		
 		<div className="cover-image-outside-container">
@@ -164,7 +169,7 @@ export default function BookDetails (props) {
 		    </div>
 		</div>
 
-	    </form>
+	    </Form>
 
 	</div>
     );

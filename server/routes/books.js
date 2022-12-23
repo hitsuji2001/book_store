@@ -90,8 +90,10 @@ router.get('/delete/:bookID', (req, res) => {
 
 router.post('/addBook', upload.single('image'), (req, res) => {
     let book = JSON.parse(req.body.book);
-    let filename = req.file.filename;
     let params = Object.values(book);
+    let filename = '';
+
+    if (req.file !== undefined || req.file !== '') filename = req.file.filename;
     params.push(filename);
 
     mysql.query("INSERT INTO Books(title, author, description, release_date, pages, category, cover_image) VALUES (?, ?, ?, ?, ?, ?, ?);", params, (err, res) => {

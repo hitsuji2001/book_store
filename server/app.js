@@ -1,11 +1,12 @@
-const createError = require('http-errors');
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const createError	= require('http-errors');
+const express		= require('express');
+const cors		= require('cors');
+const path		= require('path');
+const cookieParser	= require('cookie-parser');
+const logger		= require('morgan');
 
 const booksRouter = require('./routes/books');
+const usersRouter = require('./routes/users');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/books', booksRouter);
+app.use('/api/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

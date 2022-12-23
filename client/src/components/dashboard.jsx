@@ -1,39 +1,37 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import BookSumary from './bookSumary.jsx';
 import '../css/dashboard.css';
 
-class Dashboard extends Component {
-    constructor(props) {
-	super(props);
-	this.state = {
-	    books: [],
+export default function Dashboard(props) {
+    const [ books, setBooks ] = useState([{}]);
+    
+    useEffect(() => {
+	const fetchData = async () => {
+	    const data = await fetch('/api/books/getAllBooksSumary');
+	    const json = await data.json();
+	    setBooks(Array.from(json.books));
 	}
-    }
+	
+	fetchData().catch((err) => {
+	    console.error('ERROR in fetching data: ', err.message);
+	});
+	console.log(books);
 
-    componentDidMount() {
-	fetch('/api/books/getAllBooksSumary')
-	    .then((res) => res.json())
-	    .then((data) => this.setState({ books: data.books }))
-	    .catch((err) => {
-		console.error('ERROR in fetching data: ', err.message);
-	    });
-    }
+    }, []);
 
-    render() {
-	return (
+    return (
+	<>
 	    <div className="dashboard">
-	     	{
-		    this.state.books.map((element) => {
+		{
+		    books.map((element) => {
 			return (
 			    <div key={element.id}>
 	     			<BookSumary book={element}/>
 	     		    </div>
 	     		);
 	     	    })
-	     	}
+		}
 	    </div>
-	);
-    }
+	</>
+    );
 }
-
-export default Dashboard;

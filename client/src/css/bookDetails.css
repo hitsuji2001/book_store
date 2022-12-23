@@ -35,3 +35,7 @@ img {
 .cover-image-container {
     text-align: center;
 }
+
+.error-messages {
+    font-size: 12px;
+}
