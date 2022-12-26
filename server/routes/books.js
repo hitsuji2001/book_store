@@ -1,6 +1,6 @@
 const express	= require('express');
 const path	= require('path');
-const mysql	= require('./dbConnection.js');
+const mysql	= require('../database/dbConnection.js');
 const multer	= require('multer');
 const router	= express.Router();
 
@@ -93,7 +93,7 @@ router.post('/addBook', upload.single('image'), (req, res) => {
     let params = Object.values(book);
     let filename = '';
 
-    if (req.file !== undefined || req.file !== '') filename = req.file.filename;
+    if (req.file !== undefined) filename = req.file.filename;
     params.push(filename);
 
     mysql.query("INSERT INTO Books(title, author, description, release_date, pages, category, cover_image) VALUES (?, ?, ?, ?, ?, ?, ?);", params, (err, res) => {
@@ -101,6 +101,35 @@ router.post('/addBook', upload.single('image'), (req, res) => {
 	console.log("1 record inserted");
     });
 
+    res.sendStatus(200);
+});
+
+router.post('/editBook/:bookid', upload.single('image'), (req, res) => {
+    let book = JSON.parse(req.body.book);
+    let filename = '';
+    let index = req.params.bookid;
+
+    if (req.file !== undefined) filename = req.file.filename;
+    book = {...book, cover_image: filename}
+
+    let params = Object.values(book);
+
+    mysql.query(`UPDATE Books
+                 SET
+                    title = ?,
+                    author = ?,
+                    description = ?,
+                    release_date = ?,
+                    pages = ?,
+                    category = ?,
+                    cover_image = ?
+                 WHERE
+                     id = ${index}`
+		, params, (err, res) => {
+		    if (err) throw err;
+		    console.log(res.affectedRows + " record(s) updated");
+		});
+    
     res.sendStatus(200);
 });
 

@@ -1,16 +1,30 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { Form } from 'semantic-ui-react';
+import Modal from 'react-bootstrap/Modal';
+import Header from './header.jsx';
 import DragDropZone from './dragDropZone.jsx';
+import AddToCart from './addToCart.jsx';
 import '../css/bookDetails.css';
 
 export default function BookDetails(props) {
     const [ book, setBook ] = useState({});
     const [ files, setFiles ] = useState([]);
+    const [ modalShow, setModalShow ] = React.useState(false);
     const navigate = useNavigate();
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { 
+	register: bookRegister,
+	handleSubmit: handleBookSubmit,
+	formState: { errors : bookErrors },
+	reset : resetBook
+    } = useForm({
+	defaultValues: book,
+	mode: "onBlur",
+    });
+
+    let user = localStorage.getItem('user');
+    user = JSON.parse(user);
 
     const onSubmit = async (data) => {
 	const formData = new FormData();
@@ -19,8 +33,29 @@ export default function BookDetails(props) {
 	setBook(data);
 
 	await fetch(`/api/books/addBook`, { method: 'POST', body: formData })
-	    .then((res) => { res.json() })
-	    .then((res) => { navigate('/') });
+	    .then((res) => { 
+		if (res.ok) {
+		    navigate('/');
+		} else {
+		    return res.json();
+		}
+	    })
+    }
+
+    const onEdit = async (data) => {
+	const formData = new FormData();
+	delete data['id'];
+	formData.append('book', JSON.stringify(data));
+	formData.append('image', files[0]);
+
+	await fetch(`/api/books/editBook/${book.id}`, { method: 'POST', body: formData })
+	    .then((res) => { 
+		if (res.ok) {
+		    navigate('/');
+		} else {
+		    return res.json();
+		}
+	    })
     }
 
     useEffect(() => {
@@ -29,8 +64,8 @@ export default function BookDetails(props) {
 	    fetch(`/api/books/getBook/${id}`)
 		.then((res) => res.json())
 		.then((data) => {
-		    setBook(data)
-		    console.log('book:', data);
+		    setBook(data);
+		    resetBook(data);
 		})
 		.catch((err) => {
 		    console.error('ERROR in fetching data: ', err.message);
@@ -47,130 +82,168 @@ export default function BookDetails(props) {
     let coverImage;
     let dragDropZone;
 
-    if (props.action === 'view') {
-	actionButton = <Link to={`/book/edit/${book.id}`}><div className="btn btn-primary m-1">Edit</div></Link>;
-	if (book.cover_image !== '') coverImage = <img src={ handleCoverImage(book.cover_image) } alt="Book's Cover" />;
-	else coverImage = '';
-    }
-    else if (props.action === 'edit') {
-	actionButton = (
-	    <>
-		<input type="submit" className="btn btn-primary m-1" value="Submit"/>
-		<Link to={`/book/view/${book.id}`}><div className="btn btn-primary m-1">View</div></Link>
-	    </>
-	);
-	if (book.cover_image !== '') coverImage = <img src={ handleCoverImage(book.cover_image) } alt="Book's Cover" />;
-	else coverImage = '';
-    } else if (props.action === 'add') {
-	actionButton = <input type="submit" className="btn btn-primary m-1" value="Submit"/>
-	dragDropZone = <DragDropZone
-			   files={files}
-			   setFiles={setFiles}
-		       />;
+    if (user.role === 'admin') {
+	if (props.action === 'view') {
+	    actionButton = <Link to={`/book/edit/${book.id}`}><div className="btn btn-primary m-1">Edit</div></Link>;
+	    if (book.cover_image !== '') coverImage = <img className="img-thumbnail" src={ handleCoverImage(book.cover_image) } alt="Book's Cover" />;
+	    else coverImage = '';
+	} else if (props.action === 'edit') {
+	    dragDropZone = <DragDropZone files={files} setFiles={setFiles} />;
+	    actionButton = <input type="submit" form={'book-' + book.id} className="btn btn-primary m-1" value="Submit"/>;
+	    coverImage = '';
+	} else if (props.action === 'add') {
+	    actionButton = <input type="submit" form={'book-' + book.id} className="btn btn-primary m-1" value="Submit"/>
+	    dragDropZone = <DragDropZone files={files} setFiles={setFiles} />;
+	}
+    } else if (user.role === 'user') {
+	if (props.action === 'view') {
+	    actionButton = (
+		<>
+		    <div className="btn btn-primary m-1" onClick={() => setModalShow(true)}>Add to cart</div>
+		    <AddToCart
+			show={modalShow}
+			book={book}
+			user={user}
+			onHide={() => setModalShow(false)}
+		    />
+		</>
+	    );
+	    if (book.cover_image !== '') coverImage = <img className="img-thumbnail" src={ handleCoverImage(book.cover_image) } alt="Book's Cover" />;
+	    else coverImage = '';
+	} else if (props.action === 'edit'  || props.action === 'add') {
+	    navigate('/');
+	} 
     }
 
     return (
-	<div className="detail-container">
-	    <Form className="form" onSubmit={ handleSubmit(onSubmit) }>
-		<div className="form-container">
-		 
-		    <Form.Field className="input-group mb-3">
-			<div className="input-group-prepend">
-			    <span className="input-group-text">Tên sách</span>
-			</div>
-			<input type="text" className="form-control"
-			       name="title"
-			       value={ book.title }
-			       {...register("title", { required: true, maxLength: 30 })}
-			/>
-		    </Form.Field>
-		    {errors.title && <p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> Title is required!</p>}
-
-		    <Form.Field className="input-group mb-3">
-			<div className="input-group-prepend">
-			    <span className="input-group-text">Tác giả</span>
-			</div>
-			<input type="text" className="form-control"
-			       name="author"
-			       value={ book.author }
-			       {...register("author", { required: true, maxLength: 20 })}
-			></input>
-		    </Form.Field>
-		    {errors.author && <p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> Author is required!</p>}
-
-		    <Form.Field className="input-group mb-3">
-			<span className="input-group-text">Mô tả</span>
-			<textarea className="form-control"
-				  rows="5"
-				  name="description"
-				  defaultValue={ book.description }
-				  {...register("description")}
-				 ></textarea>
-		    </Form.Field>
-
-		    <Form.Field className="input-group mb-3">
-			<div className="input-group-prepend">
-			    <span className="input-group-text">Ngày phát hành</span>
-			</div>
-			<input type="date"
-			       className="form-control"
-			       name="release_date"
-			       value={ book.release_date }
-			       {...register("release_date")}
-			></input>
-		    </Form.Field>
-
-		    <div className="d-sm-flex">
+	<>
+	    <Header/>
+	    <div className="detail-container">
+		<Form className="form" id={'book-' + book.id} onSubmit={ props.action !== 'edit' ? handleBookSubmit(onSubmit) : handleBookSubmit(onEdit) }>
+		    <div className="form-container">
+			
 			<Form.Field className="input-group mb-3">
 			    <div className="input-group-prepend">
-				<span className="input-group-text">Số trang</span>
+				<span className="input-group-text">Tên sách</span>
 			    </div>
-			    <input type="number"
+			    <input type="text" className="form-control"
+				   name="title"
+				   disabled={ props.action === 'edit' ? false : true }
+				   {...bookRegister("title", { 
+				       required: "Title is required!", 
+				       maxLength: {
+					   value: 100,
+					   message: "Title must be less than 100 characters!"
+				       }
+				   })}
+			    />
+			</Form.Field>
+			{bookErrors.title && <p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> { bookErrors.title.message }</p>}
+
+			<Form.Field className="input-group mb-3">
+			    <div className="input-group-prepend">
+				<span className="input-group-text">Tác giả</span>
+			    </div>
+			    <input type="text" className="form-control"
+				   name="author"
+				   disabled={ props.action === 'edit' ? false : true }
+				   {...bookRegister("author", {
+				       required: "Author is required!",
+				       maxLength: {
+					   value: 30,
+					   message: "Author's name can't have more than 30 characters!"
+				       }
+				   })}
+			    ></input>
+			</Form.Field>
+			{bookErrors.author && <p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> { bookErrors.author.messages }</p>}
+
+			<Form.Field className="input-group mb-3">
+			    <span className="input-group-text">Mô tả</span>
+			    <textarea className="form-control"
+				      rows="5"
+				      name="description"
+				      disabled={ props.action === 'edit' ? false : true }
+				      {...bookRegister("description")}
+			    ></textarea>
+			</Form.Field>
+
+			<Form.Field className="input-group mb-3">
+			    <div className="input-group-prepend">
+				<span className="input-group-text">Ngày phát hành</span>
+			    </div>
+			    <input type="date"
 				   className="form-control"
-				   name="pages"
-				   value={ book.pages }
-				   {...register("pages", { min: 0 })}
+				   name="release_date"
+				   disabled={ props.action === 'edit' ? false : true }
+				   {...bookRegister("release_date")}
 			    ></input>
 			</Form.Field>
 
-			<Form.Field className="input-group mb-3">
-			    <div className="input-group-prepend">
-				<span className="input-group-text">Thể loại</span>
-			    </div>
-			    <select value={ book.category }
-				    name="category"
-				    {...register("category")}
-				    className="form-control">
-				<option value="law">Chính trị – pháp luật</option>
-				<option value="science">Khoa học công nghệ – Kinh tế</option>
-				<option value="literature">Văn học nghệ thuật</option>
-				<option value="history">Văn hóa xã hội – Lịch sử</option>
-				<option value="novel">Truyện, tiểu thuyết</option>
-				<option value="politic">Tâm lý, tâm linh, tôn giáo</option>
-				<option value="teenage">Thiếu nhi</option>
-				<option value="other">Khác</option>
-			    </select>
-			</Form.Field>
+			<div className="d-sm-flex">
+			    <Form.Field className="input-group mb-3">
+				<div className="input-group-prepend">
+				    <span className="input-group-text">Số trang</span>
+				</div>
+				<input type="number"
+				       className="form-control"
+				       name="pages"
+				       disabled={ props.action === 'edit' ? false : true }
+				       {...bookRegister("pages", { 
+					   min: {
+					       value: 0,
+					       message: "Pages number must be greater than 0"
+					   },
+					   max: {
+					       value: 32767,
+					       message: "Pages number must be smaller than 32767"
+					   }
+				       })}
+				></input>
+			    </Form.Field>
+
+			    <Form.Field className="input-group mb-3">
+				<div className="input-group-prepend">
+				    <span className="input-group-text">Thể loại</span>
+				</div>
+				<select name="category"
+					disabled={ props.action === 'edit' ? false : true }
+					{...bookRegister("category")}
+					className="form-control">
+				    <option value="law">Chính trị – pháp luật</option>
+				    <option value="selfhelp">Phát triển bản thân</option>
+				    <option value="science">Khoa học công nghệ</option>
+				    <option value="finance">Kinh tế</option>
+				    <option value="literature">Văn học nghệ thuật</option>
+				    <option value="history">Văn hóa xã hội – Lịch sử</option>
+				    <option value="novel">Truyện, tiểu thuyết</option>
+				    <option value="politic">Tâm lý, tâm linh, tôn giáo</option>
+				    <option value="teenage">Thiếu nhi</option>
+				    <option value="other">Khác</option>
+				</select>
+			    </Form.Field>
+
+			</div>
+			{bookErrors.pages && <p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> { bookErrors.pages.message }</p>}
+		    </div>
+		    
+		    <div className="cover-image-outside-container">
+			<div className="cover-image-container mb-3">
+			    <span className="input-group-text mb-3">Ảnh bìa</span>
+			    { dragDropZone }
+			    { coverImage }
+			</div>
 
 		    </div>
-		    {errors.pages && <p className="error-messages alert alert-danger" role="alert"><i className="fi fi-rr-exclamation"></i> Page count can't be negative</p>}
+
+		</Form>
+
+		<div className="button-container">
+		    <a href="/"><div className="btn btn-secondary m-1">Back</div></a>
+		    { actionButton }
 		</div>
-		
-		<div className="cover-image-outside-container">
-		    <div className="cover-image-container mb-3">
-			<span className="input-group-text mb-3">Ảnh bìa</span>
-			{ dragDropZone }
-			{ coverImage }
-		    </div>
 
-		    <div className="button-container">
-			{ actionButton }
-			<a href="/"><div className="btn btn-secondary m-1">Back</div></a>
-		    </div>
-		</div>
-
-	    </Form>
-
-	</div>
+	    </div>
+	</>
     );
 }

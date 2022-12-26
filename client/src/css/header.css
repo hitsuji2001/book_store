@@ -9,9 +9,23 @@
     line-height: 5px;
 }
 
-.add-btn {
+.right-side-container {
+    margin-top: 1%;
+    width: auto;
+    display: flex;
+}
+
+.hello-mess {
+    padding-top: 1.5%;
+    padding-right: 1%;
+    text-transform: capitalize;
+    font-weight: 700;
+    font-size: 24px;
+    color: white;
 }
 
 .header {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 1%;
 }

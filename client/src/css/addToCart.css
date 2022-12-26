@@ -1,0 +1,15 @@
+.body-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.preview-img {
+    width: 128px;
+}
+
+.add-to-cart-form {
+    width: 50%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}

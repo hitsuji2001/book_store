@@ -1,13 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
+import Header from './header.jsx';
+import '../css/error.css';
 
-class Error extends Component {
-    render() {
-	return (
-	    <div className="error">
-		<span>Error</span>
+export default function Error(props) {
+    return (
+	<>
+	    <div className="error-message-container">
+ 		<Header/>
+		<section className="error-container">
+		    <span>4</span>
+		    <span><span className="screen-reader-text">0</span></span>
+		    <span>4</span>
+		</section>
+		<section className="error-container">
+		    <span className="small-text">Lạc rồi bạn ơi</span>
+		</section>
 	    </div>
-	);
-    }
+ 	</>
+    );
 }
-
-export default Error;

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { Form } from 'semantic-ui-react';
+import Header from './header.jsx';
 import '../css/signInForm.css';
 
 export default function SignUp(props) {
@@ -10,7 +11,7 @@ export default function SignUp(props) {
     const navigate = useNavigate();
 
     const onSubmit = async (data) => {
-	data = {...data, password: btoa(data.password)};
+	data = {...data, password: btoa(data.password), role: 'user'};
 	delete data['confirm_password'];
 
 	await fetch(`/api/users/signup`, 
@@ -34,8 +35,19 @@ export default function SignUp(props) {
 	    })
     }
 
+    const handleAnonymousLogin = async (data) => {
+	let user = {
+	    username: 'anonymous',
+	    role: 'none',
+	    token: btoa('anonymous')
+	};
+	localStorage.setItem('user', JSON.stringify(user));
+	navigate('/');
+    }
+
     return (
 	<>
+	    <Header/>
 	    {
 		serverResponse &&
 		<div className="server-response alert alert-danger"><i className="fi fi-rr-exclamation"></i>   {serverResponse}</div>
@@ -158,7 +170,7 @@ export default function SignUp(props) {
 		    }
 
 		    <button type="submit" className="btn btn-primary">Sign Up</button>
-
+		    <p className="mt-3">Or login <a href="#" onClick={ handleAnonymousLogin }>Anonymously</a></p>
 		</Form>
 	    </div>
 

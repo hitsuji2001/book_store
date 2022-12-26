@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Error from './components/error.jsx';
 import BookDetails from './components/bookDetails.jsx';
 import Dashboard from './components/dashboard.jsx';
-import Header from './components/header.jsx';
+import ViewCart from './components/viewCart.jsx';
 import SignUp from './components/signupForm.jsx';
 import SignIn from './components/signinForm.jsx';
 
@@ -14,11 +14,11 @@ import './css/App.css'
 function App() {
       return (
       	<div className="App">
-	    <Header/>
       	    <Routes>
       		<Route path="/" element={<Dashboard/>}/>
 		<Route path="/signin" element={<SignIn/>}/>
 		<Route path="/signup" element={<SignUp/>}/>
+		<Route path="/user/:userID/viewcart" element={<ViewCart/>}/>
       		<Route path="book/view/:bookID" element={<BookDetails action="view"/>}/>
       		<Route path="book/edit/:bookID" element={<BookDetails action="edit"/>}/>
       		<Route path="book/delete/:bookID" element={<BookDetails action="delete"/>}/>

@@ -39,3 +39,8 @@ img {
 .error-messages {
     font-size: 12px;
 }
+
+.button-container {
+    display: flex;
+    flex-direction: row-reverse;
+}

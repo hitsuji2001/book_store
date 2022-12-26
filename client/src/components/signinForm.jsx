@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { Form } from 'semantic-ui-react';
+import Header from './header.jsx';
 import '../css/signInForm.css';
 
 export default function SignIn(props) {
@@ -12,28 +13,36 @@ export default function SignIn(props) {
     const onSubmit = async (data) => {
 	data = {...data, password: btoa(data.password)};
 	await fetch(`/api/users/signin`, 
-		    { 
-			method: 'POST', 
-			headers: {
-			    'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(data)
-		    })
+	      { 
+		  method: 'POST', 
+		  headers: {
+		      'Content-Type': 'application/json'
+		  },
+		  body: JSON.stringify(data)
+	      })
 	    .then((res) => {
-		if (res.ok) {
-		    navigate('/');
-		} else {
-		    return res.json();
-		}
+		return res.json();
 	    })
 	    .then((res) => {
+		if (res.message === 'Success') navigate('/');
 		setServerResponse(res.message);
-		console.log(res);
+		localStorage.setItem('user', JSON.stringify(res.user));
 	    })
+    }
+
+    const handleAnonymousLogin = async (data) => {
+	let user = {
+	    username: 'anonymous',
+	    role: 'none',
+	    token: btoa('anonymous')
+	};
+	localStorage.setItem('user', JSON.stringify(user));
+	navigate('/');
     }
 
     return (
 	<>
+	    <Header/>
 	    {
 		serverResponse &&
 		<div className="server-response alert alert-danger"><i className="fi fi-rr-exclamation"></i>   {serverResponse}</div>
@@ -82,8 +91,8 @@ export default function SignIn(props) {
 			    <p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> Password is required and must be atleast 6 characters!</p>
 		    }
 		    
-		    <button type="submit" className="btn btn-primary">Sign Up</button>
-
+		    <button type="submit" className="btn btn-primary">Sign In</button>
+		    <p className="mt-3">Or login <a href="#" onClick={ handleAnonymousLogin }>Anonymously</a></p>
 		</Form>
 	    </div>
 	</>

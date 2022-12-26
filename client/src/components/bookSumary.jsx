@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
+import { UserContext } from './dashboard.jsx';
+import AddToCart from './addToCart.jsx';
 import '../css/bookSumary.css';
 
-function BookSumary(props) {
-    const navigate = useNavigate();
+export default function BookSumary(props) {
     const [ modalShow, setModalShow ] = React.useState(false);
+    const navigate = useNavigate();
+    const user = useContext(UserContext);
 
     async function handleOnDelete(e, id) {
 	await fetch(`/api/books/delete/${id}`)
@@ -15,6 +18,68 @@ function BookSumary(props) {
     function handleCoverImage(name) {
 	if (name !== '' && name !== undefined) return `/api/books/getImage/${name}`;
 	else return '../../default-cover.jpg';
+    }
+
+    let functionalButtons = null;
+    if (user.role === 'admin') {
+	functionalButtons = (
+	    <>
+		<a href={"/book/view/" + props.book.id}>
+		    <div className="icon"><i className="btn btn-info btn-sm fi fi-rr-search-alt" data-toggle="tooltip" title="View"></i></div>
+		</a>
+
+		<a href={"/book/edit/" + props.book.id}>
+		    <div className="icon"><i className="btn btn-info btn-sm fi fi-rr-pencil-ruler" data-toggle="tooltip" title="Edit"></i></div>
+		</a>
+		<div className="icon" onClick={() => setModalShow(true)}>
+		    <i className="btn btn-info btn-sm fi fi-rr-trash" data-toggle="tooltip" title="Delete"></i>
+		</div>
+		<Modal
+		    show={modalShow}
+		    aria-labelledby="contained-modal-title-vcenter"
+		    centered
+		>
+		    <Modal.Header>
+			<Modal.Title id="contained-modal-title-vcenter">
+			    Confirmation
+			</Modal.Title>
+		    </Modal.Header>
+		    <Modal.Body>
+			<h4>Are you sure you want to delete this book?</h4>
+		    </Modal.Body>
+		    <Modal.Footer>
+			<a href="/"><div className="btn btn-danger" onClick={ (e) => handleOnDelete(e, props.book.id) }>Delete</div></a>
+			<div className="btn btn-primary" onClick={ () => setModalShow(false) }>No</div>
+		    </Modal.Footer>
+		</Modal>
+	    </>
+	);
+    } else if (user.role === 'user') {
+	functionalButtons = (
+	    <>
+		<a href={"/book/view/" + props.book.id}>
+		    <div className="icon"><i className="btn btn-info btn-sm fi fi-rr-search-alt" data-toggle="tooltip" title="View"></i></div>
+		</a>
+
+		<div onClick={() => setModalShow(true)}>
+		    <div className="icon"><i className="btn btn-info btn-sm fi fi-rr-shopping-cart-add" data-toggle="tooltip" title="Add to Cart"></i></div>
+		</div>
+		<AddToCart
+		    show={modalShow}
+		    book={props.book}
+		    user={user}
+		    onHide={() => setModalShow(false)}
+		/>
+	    </>
+	);
+    } else if (user.role === 'none') {
+	functionalButtons = (
+	    <>
+		<a href={"/book/view/" + props.book.id}>
+		    <div className="icon"><i className="btn btn-info btn-sm fi fi-rr-search-alt" data-toggle="tooltip" title="View"></i></div>
+		</a>
+	    </>
+	);
     }
 
     return(
@@ -41,39 +106,9 @@ function BookSumary(props) {
 		    </div>
 		</div>
 		<div className="btn-list">
-		    <a href={"/book/view/" + props.book.id}>
-			<div className="icon"><i className="btn btn-info btn-sm fi fi-rr-search-alt" data-toggle="tooltip" title="View"></i></div>
-		    </a>
-		    <a href={"/book/edit/" + props.book.id}>
-			<div className="icon"><i className="btn btn-info btn-sm fi fi-rr-pencil-ruler" data-toggle="tooltip" title="Edit"></i></div>
-		    </a>
-
-		    <div className="icon" onClick={() => setModalShow(true)}>
-			<i className="btn btn-info btn-sm fi fi-rr-trash" data-toggle="tooltip" title="Delete"></i>
-		    </div>
-		    <Modal 
-			show={modalShow}
-			aria-labelledby="contained-modal-title-vcenter"
-			centered
-		    >
-			<Modal.Header>
-			    <Modal.Title id="contained-modal-title-vcenter">
-				Xác nhận
-			    </Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-			    <h4>Bạn có chắc chắn muốn xóa quyển sách này?</h4>
-			</Modal.Body>
-			<Modal.Footer>
-			    <a href="/"><div className="btn btn-danger" onClick={ (e) => handleOnDelete(e, props.book.id) }>Xóa</div></a>
-			    <div className="btn btn-primary" onClick={ () => setModalShow(false) }>Không</div>
-			</Modal.Footer>
-		    </Modal>
-
+		    { functionalButtons }
 		</div>
 	    </div>
 	</div>
     );
 }
-
-export default BookSumary;
