@@ -10,6 +10,7 @@ const create_table = async function() {
         pages         INT UNSIGNED,
         category      VARCHAR(255) NOT NULL,
         cover_image   VARCHAR(255),
+        status        VARCHAR(255) NOT NULL,
         PRIMARY KEY(id)
     )`;
 
@@ -28,6 +29,7 @@ const create_table = async function() {
         id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
         book_id    INT UNSIGNED NOT NULL,
         user_id    INT UNSIGNED NOT NULL,
+        rating     INT UNSIGNED,
         text       VARCHAR(1000),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY(id),
@@ -62,7 +64,8 @@ const insert_books = async function() {
 	release_date: '2019-02-14',
 	pages: 360,
 	category: 'selfhelp',
-	cover_image: 'sach-nghe-thuat-giao-tiep-de-thanh-cong-1.jpeg'
+	cover_image: 'sach-nghe-thuat-giao-tiep-de-thanh-cong-1.jpeg',
+	status: 'active'
     }, {
 	title: 'The Simple Path To Wealth',
 	author: 'J. L. Collins',
@@ -70,7 +73,8 @@ const insert_books = async function() {
 	release_date: '2017-06-24',
 	pages: 212,
 	category: 'finance',
-	cover_image: 'image.jpeg'
+	cover_image: 'image.jpeg',
+	status: 'active'
     }, {
 	title: 'Khi Bạn Đang Mơ Thì Người Khác Đang Nỗ Lực',
 	author: 'Vĩ Nhân',
@@ -78,7 +82,8 @@ const insert_books = async function() {
 	release_date: '2018-11-22',
 	pages: 415,
 	category: 'selfhelp',
-	cover_image: 'cdeabe1e07dc2fd2a2d99c4bd558f41f.jpg'
+	cover_image: 'cdeabe1e07dc2fd2a2d99c4bd558f41f.jpg',
+	status: 'active'
     }, {
 	title: 'Deep work',
 	author: 'Cal Newport',
@@ -86,7 +91,8 @@ const insert_books = async function() {
 	release_date: '2016-01-05',
 	pages: 304,
 	category: 'selfhelp',
-	cover_image: '41WSUER72L._SX333_BO1204203200_.jpg'
+	cover_image: '41WSUER72L._SX333_BO1204203200_.jpg',
+	status: 'active'
     }, {
 	title: 'Tư Duy Tối Ưu',
 	author: 'Stephen R. Covey',
@@ -94,7 +100,8 @@ const insert_books = async function() {
 	release_date: '2015-07-14',
 	pages: 334,
 	category: 'selfhelp',
-	cover_image: 'BtwS0G0oN8.webp'
+	cover_image: 'BtwS0G0oN8.webp',
+	status: 'active'
     }, {
 	title: 'Cha giàu cha nghèo',
 	author: 'Robert T.Kiyosaki',
@@ -102,7 +109,8 @@ const insert_books = async function() {
 	release_date: '2000-04-01',
 	pages: 375,
 	category: 'finance',
-	cover_image: 'Cha-giau-cha-ngheo.jpg'
+	cover_image: 'Cha-giau-cha-ngheo.jpg',
+	status: 'active'
     }, {
 	title: 'Hoàn Thành Mọi Việc Không Hề Khó',
 	author: 'David Allen',
@@ -110,7 +118,8 @@ const insert_books = async function() {
 	release_date: '2016-05-01',
 	pages: 395,
 	category: 'selfhelp',
-	cover_image: 'hoan_thanh_moi_viec_outline_5.7.2016-01.u2469.d20160831.t144732.26335.jpg'
+	cover_image: 'hoan_thanh_moi_viec_outline_5.7.2016-01.u2469.d20160831.t144732.26335.jpg',
+	status: 'active'
     },{
 	title: 'Temp',
 	author: 'Temp',
@@ -118,12 +127,13 @@ const insert_books = async function() {
 	release_date: '2001-29-05',
 	pages: 295,
 	category: 'other',
-	cover_image: ''
+	cover_image: '',
+	status: 'active'
     }];
 
     for (let i = 0; i < books.length; i++) {
 	await mysql.promise().
-	    query(`INSERT INTO Books(title, author, description, release_date, pages, category, cover_image) VALUES (?, ?, ?, ?, ?, ?, ?)`, Object.values(books[i]))
+	    query(`INSERT INTO Books(title, author, description, release_date, pages, category, cover_image, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, Object.values(books[i]))
     }
 }
 
@@ -156,6 +166,13 @@ const insert_users = async function() {
 	password: ' ',
 	email: 'anonymous@gmail.com',
 	role: 'none',
+    },{
+	username: 'hitsuji0501',
+	firstname: 'Minh',
+	lastname: 'Nguyen',
+	password: 'MTIzNDU2',
+	email: 'hitsuji@hitsuji.com',
+	role: 'user',
     }];
 
     for (let i = 0; i < users.length; i++) {

@@ -8,7 +8,6 @@
 }
 
 .add-to-cart-form {
-    width: 50%;
     display: flex;
     justify-content: flex-start;
     flex-direction: column;

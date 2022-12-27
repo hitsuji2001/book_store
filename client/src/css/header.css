@@ -7,6 +7,7 @@
     margin-top: 15px;
     font-size: 18px;
     line-height: 5px;
+    color: black;
 }
 
 .right-side-container {
@@ -25,7 +26,32 @@
 }
 
 .header {
+    position: fixed;
+    width: 100%;
     display: flex;
+    background-color: #232f3e;
     justify-content: space-between;
     margin-bottom: 1%;
+    z-index: 2;
+}
+
+.content {
+  padding-top: 6%;
+}
+
+.logo-containter-container {
+    padding: 0.5%;
+    background-color: #FF8A5B;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.dropdown-toggle {
+    background-color: #FF8A5B !important;
+}
+
+.dropdown-toggle::after {
+    display: none !important; 
 }

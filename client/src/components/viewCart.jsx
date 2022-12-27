@@ -22,7 +22,7 @@ export default function ViewCart(props) {
     return (
 	<>
 	    <Header/>
-	    <div className="list-container">
+	    <div className="list-container content">
 		<UserContext.Provider value={user}>
 		    <InCartBooks user={user}/>
 		    <PayedBooks user={user}/>

@@ -1,4 +1,5 @@
 .card {
+    padding: 1%;
     margin: 15px;
     width: 256px;
 }
@@ -11,6 +12,7 @@
 
 
 .text-holder {
+    color: black;
     display: flex;
 }
 

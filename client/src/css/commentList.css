@@ -1,0 +1,39 @@
+.comment-user-avatar {
+    width: 48px;
+    height: 48px;
+    margin-right: 2%;
+}
+
+.comment-username {
+    color: black;
+    font-style: oblique;
+}
+
+.comment-text {
+    color: black;
+}
+
+.user-avatar-and-name {
+    display: flex;
+}
+
+.comment-container {
+    width: 50%;
+    padding: 1%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-left-side {
+    width: 75%;
+}
+
+.comment-right-side {
+    width: 25%;
+    text-align: right;
+    font-size: 12px;
+}
+
+.comment-right-side-text {
+    margin-right: 10%;
+}

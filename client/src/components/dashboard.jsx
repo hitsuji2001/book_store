@@ -33,13 +33,13 @@ function Dashboard(props) {
     return (
 	<>
 	    <Header/>
-	    <div className="dashboard">
+	    <div className="dashboard content">
 		{
 		    books.map((element) => {
 			return (
-			    <div key={element.id}>
-				<UserContext.Provider value={user}>
-	     			    <BookSumary book={element} user={user}/>
+			    <div key={'temp-div-' + element.id}>
+				<UserContext.Provider key={'usercontext-' + element.id} value={user}>
+	     			    <BookSumary key={'booksumary-' + element.id} book={element} user={user}/>
 				</UserContext.Provider>
 	     		    </div>
 	     		);

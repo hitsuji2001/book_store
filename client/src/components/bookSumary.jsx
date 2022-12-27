@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { UserContext } from './dashboard.jsx';
 import AddToCart from './addToCart.jsx';
@@ -9,11 +10,6 @@ export default function BookSumary(props) {
     const [ modalShow, setModalShow ] = React.useState(false);
     const navigate = useNavigate();
     const user = useContext(UserContext);
-
-    async function handleOnDelete(e, id) {
-	await fetch(`/api/books/delete/${id}`)
-	    .then((res) => { res.json() });
-    }
 
     function handleCoverImage(name) {
 	if (name !== '' && name !== undefined) return `/api/books/getImage/${name}`;
@@ -34,24 +30,11 @@ export default function BookSumary(props) {
 		<div className="icon" onClick={() => setModalShow(true)}>
 		    <i className="btn btn-info btn-sm fi fi-rr-trash" data-toggle="tooltip" title="Delete"></i>
 		</div>
-		<Modal
+		<CenteredModal
+		    onHide={() =>{setModalShow(false)}}  
+		    book={props.book}
 		    show={modalShow}
-		    aria-labelledby="contained-modal-title-vcenter"
-		    centered
-		>
-		    <Modal.Header>
-			<Modal.Title id="contained-modal-title-vcenter">
-			    Confirmation
-			</Modal.Title>
-		    </Modal.Header>
-		    <Modal.Body>
-			<h4>Are you sure you want to delete this book?</h4>
-		    </Modal.Body>
-		    <Modal.Footer>
-			<a href="/"><div className="btn btn-danger" onClick={ (e) => handleOnDelete(e, props.book.id) }>Delete</div></a>
-			<div className="btn btn-primary" onClick={ () => setModalShow(false) }>No</div>
-		    </Modal.Footer>
-		</Modal>
+		/>
 	    </>
 	);
     } else if (user.role === 'user') {
@@ -83,14 +66,14 @@ export default function BookSumary(props) {
     }
 
     return(
-	<div className="card border-info">
+	<div className="card">
 	    <a href={"/book/view/" + props.book.id}>
 		<div className="card-img">
 		    <img src={ handleCoverImage(props.book.cover_image) } alt="Book's Cover"></img>
 		</div>
 	    </a>
 
-	    <div className="text-holder text-muted">
+	    <div className="text-holder">
 		<div className="text-sumary text-capitalize">
 		    <div className="title text-truncate">
 			<div className="icon"><i className="fi fi-rr-book-bookmark"></i></div>
@@ -110,5 +93,38 @@ export default function BookSumary(props) {
 		</div>
 	    </div>
 	</div>
+    );
+}
+
+async function handleOnDelete(e, id) {
+    await fetch(`/api/books/delete/${id}`)
+	.then((res) => { 
+	    res.json();
+	    window.location.reload(true);
+	});
+}
+
+function CenteredModal(props) {
+    return (
+	<Modal
+	    {...props}
+	    aria-labelledby="contained-modal-title-vcenter"
+	    centered
+	>
+	    <Modal.Header closeButton>
+		<Modal.Title id="contained-modal-title-vcenter">
+		    Confirmation
+		</Modal.Title>
+	    </Modal.Header>
+	    <Modal.Body>
+		<p>
+		    Are you sure you want to delete this book?
+		</p>
+	    </Modal.Body>
+	    <Modal.Footer>
+		<Button className="btn btn-danger" onClick={(e) => {handleOnDelete(e, props.book.id)}}>Delete</Button>
+		<Button onClick={props.onHide}>Close</Button>
+	    </Modal.Footer>
+	</Modal>
     );
 }

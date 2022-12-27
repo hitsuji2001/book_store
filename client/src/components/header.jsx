@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+
 import Dropdown from 'react-bootstrap/Dropdown';
 import '../css/header.css';
 
@@ -25,10 +26,40 @@ export default function Header(props) {
 	navigate('/signin');
     }
 
+    let dropDownItems;
+    if (user.role === 'none') {
+	dropDownItems = (
+	    <>
+		<Dropdown.Item href="/signin" onClick={ handleOnClick }>Sign In</Dropdown.Item>
+		<Dropdown.Item href="/signup" onClick={ handleOnClick }>Sign Up</Dropdown.Item>
+	    </>	    
+	);
+    } else if (user.role === 'admin') {
+	dropDownItems = (
+	    <>
+		<Dropdown.Item href={"/user/profile/" + user.id}>Your profile</Dropdown.Item>
+		<Dropdown.Item href={'/user/' + user.id + '/viewcart'}>View cart</Dropdown.Item>
+		<Dropdown.Divider />
+		<Dropdown.Item href="/book/add">Add book</Dropdown.Item>
+		<Dropdown.Divider />
+		<Dropdown.Item href="/signin" onClick={ handleOnClick }>Logout</Dropdown.Item>
+	    </>
+	);
+    } else {
+	dropDownItems = (
+	    <>
+		<Dropdown.Item href={"/user/profile/" + user.id}>Your profile</Dropdown.Item>
+		<Dropdown.Item href={'/user/' + user.id + '/viewcart'}>View cart</Dropdown.Item>
+		<Dropdown.Divider />
+		<Dropdown.Item href="/signin" onClick={ handleOnClick }>Logout</Dropdown.Item>
+	    </>
+	);
+    }
+
     return (
 	<div>
-	    <div className="header bg-info">
-		<a href="/" className="btn btn-warning rounded">
+	    <div className="header">
+		<a href="/" className="logo-containter-container rounded">
 		    <div className="logo-containter">
 			<img src="/reading.png" alt="logo" height="54px"/>
 			<div className="logo-title">
@@ -43,32 +74,13 @@ export default function Header(props) {
 		</div>
 		
 		<div className="right-side-container">
-		    {
-			user.role === 'admin' ?
-			    <a href="/book/add"><div className="add-btn btn btn-primary">Add</div></a>
-			    : ''
-		    }
-		    <Dropdown size="sm" className="toggle">
-			<Dropdown.Toggle >
+		    <Dropdown size="sm">
+			<Dropdown.Toggle>
 			    <img src="../../default-avatar.png"  alt="avatar" height="24px" width="24px"/>
 			</Dropdown.Toggle>
 
 			<Dropdown.Menu>
-			    {
-				user.role === 'none' || (user.firstname === undefined && user.lastname === undefined) ?
-				    (<>
-					 <Dropdown.Item href="/signin" onClick={ handleOnClick }>Sign In</Dropdown.Item>
-					 <Dropdown.Item href="/signup" onClick={ handleOnClick }>Sign Up</Dropdown.Item>
-				     </>)
-				    :
-				    (<>
-					 <Dropdown.Item href={"/user/profile/" + user.id}>Your profile</Dropdown.Item>
-					 <Dropdown.Item href={'/user/' + user.id + '/viewcart'}>View cart</Dropdown.Item>
-					 <Dropdown.Divider />
-					 <Dropdown.Item href="/signin" onClick={ handleOnClick }>Logout</Dropdown.Item>
-				     </>)
-
-			    }
+			    {dropDownItems}
 			</Dropdown.Menu>
 		    </Dropdown>
 		</div>

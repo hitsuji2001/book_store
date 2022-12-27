@@ -1,0 +1,39 @@
+:root {
+    --font-color: black;
+}
+
+.book-info-img {
+    width: 64px;
+    height: 64px;
+    margin-right: 2%;
+    color: var(--font-color);
+}
+
+.order-container {
+    width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.order-author {
+    margin-right: 2%;
+}
+
+.order-category {
+    text-transform: capitalize;
+}
+
+.order-left-side {
+    width: 30%;
+    display: flex;
+}
+
+.book-info-second-line {
+    display: flex;
+    justify-content: space-between;
+}
+
+.order-quantity {
+    display: flex;
+}

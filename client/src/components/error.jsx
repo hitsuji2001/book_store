@@ -5,8 +5,8 @@ import '../css/error.css';
 export default function Error(props) {
     return (
 	<>
-	    <div className="error-message-container">
- 		<Header/>
+ 	    <Header/>
+	    <div className="error-message-container content">
 		<section className="error-container">
 		    <span>4</span>
 		    <span><span className="screen-reader-text">0</span></span>

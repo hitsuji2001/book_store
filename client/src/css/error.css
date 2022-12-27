@@ -143,7 +143,8 @@
 
 body {
     height: 100%;
-    background-color: #416475;
+    /* background-color: #416475; */
+    /* background-color: #BBCDE5; */
     margin-bottom: 50px;
 }
 
@@ -186,9 +187,4 @@ a.more-link {
 
 .small-text{
     font-size: 69px;
-}
-
-.error-message-container {
-    background-color: #416475;
-    padding-bottom: 2.4%;
 }

@@ -27,7 +27,7 @@ function download_image(req, res) {
 }
 
 router.get('/getAllBooksSumary', (req, res) => {
-    mysql.query('SELECT id, title, author, category, cover_image FROM Books', (error, rows, fields) => {
+    mysql.query('SELECT id, title, author, category, cover_image FROM Books WHERE status != "removed"', (error, rows, fields) => {
 	if (error) throw error;
 	let data = { 'books': rows };
 	res.json(data);
@@ -35,7 +35,7 @@ router.get('/getAllBooksSumary', (req, res) => {
 });
 
 router.get('/getAllBooks', (req, res) => {
-    mysql.query('SELECT * FROM Books', (error, rows, fields) => {
+    mysql.query('SELECT * FROM Books WHERE status != "removed"', (error, rows, fields) => {
 	if (error) throw error;
 	let data = { 'books': rows };
 	res.json(data);
@@ -73,7 +73,7 @@ router.get('/getImage/:name', (req, res, next) => {
 
 router.get('/getBookSumary/:bookID', (req, res) => {
     let id = req.params.bookID;
-    mysql.query(`SELECT title, author, category, cover_image FROM Books WHERE id=${id}`, (error, rows, fields) => {
+    mysql.query(`SELECT title, author, category, cover_image FROM Books WHERE id=${id} AND status != "removed"`, (error, rows, fields) => {
 	if (error) throw error;
 	res.json(rows[0]);
     });
@@ -81,9 +81,9 @@ router.get('/getBookSumary/:bookID', (req, res) => {
 
 router.get('/delete/:bookID', (req, res) => {
     let id = req.params.bookID;
-    mysql.query(`DELETE FROM Books WHERE id = ${id}`, (err, res) => {
+    mysql.query(`UPDATE Books SET status = "removed" WHERE id = ${id}`, (err, res) => {
 	if (err) throw err;
-	console.log("1 record deleted");	
+	console.log("1 record deleted");
     });
     res.sendStatus(200);
 });
@@ -95,8 +95,9 @@ router.post('/addBook', upload.single('image'), (req, res) => {
 
     if (req.file !== undefined) filename = req.file.filename;
     params.push(filename);
+    params.push('active');
 
-    mysql.query("INSERT INTO Books(title, author, description, release_date, pages, category, cover_image) VALUES (?, ?, ?, ?, ?, ?, ?);", params, (err, res) => {
+    mysql.query("INSERT INTO Books(title, author, description, release_date, pages, category, cover_image, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", params, (err, res) => {
 	if (err) throw err;
 	console.log("1 record inserted");
     });
@@ -131,6 +132,20 @@ router.post('/editBook/:bookid', upload.single('image'), (req, res) => {
 		});
     
     res.sendStatus(200);
+});
+
+router.get('/getComments/:bookid', (req, res) => {
+    const bookid = req.params.bookid;
+    const query = `SELECT c.id, c.text, c.created_at, c.rating, u.username
+                   FROM Comments c 
+                   LEFT JOIN Users u ON u.id = c.user_id
+                   WHERE c.book_id = ? AND (c.rating != 0 OR (c.text IS NOT NULL AND c.text != ''))
+                   GROUP BY c.id`;
+
+    mysql.query(query, [bookid], (err, rows, fields) => {    
+	if (err) throw err;
+	res.json(rows);
+    });
 });
 
 module.exports = router;

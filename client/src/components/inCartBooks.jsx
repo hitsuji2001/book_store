@@ -1,18 +1,15 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../css/inCartBooks.css';
+import Order from './order.jsx';
 
+let OrderContext = createContext();
 export default function InCartBook(props) {
     const [ orders, setOrders ] = useState([]);
     const [ user, setUser ] = useState({});
+    const [ modalShow, setModalShow ] = React.useState(false);
     const navigate = useNavigate();
 
     const loggedInUser = localStorage.getItem('user');
-    const handleCoverImage = (name) => {
-	if (name !== '' && name !== undefined) return `/api/books/getImage/${name}`;
-	else return '../../default-cover.jpg';
-    }
-
     useEffect(() => {
 	const fetchData = async () => {
 	    let currentUser = JSON.parse(loggedInUser);
@@ -34,41 +31,39 @@ export default function InCartBook(props) {
 
     return (
 	<>
-	    <table className="table table-bordered">
-		<thead>
-		    <tr>
-			<th scope="col" className="order-info-id">Order ID</th>
-			<th scope="col" className="order-info-book">Book</th>
-			<th scope="col" className="order-info-quantity">Quantity</th>
-			<th scope="col" className="order-info-action">Action</th>
-		    </tr>
-		</thead>
-		<tbody>
-		    {
-			orders.map((order) => {
-			    return (
-				<tr>
-				    <th scope="row">{order.id}</th>
-				    <td>
-					<div className="book-info-container">
-					    <div className="w-75">
-						<img className="book-info-img img-thumbnail" alt="Cover's image" src={ handleCoverImage(order.cover_image) }/>
-						<span className="book-info-title">{order.title}</span>
-					    </div>
-					    <span className="book-info-time text-secondary">{new Date(order.created_at).toLocaleString()}</span>
-					</div>
-				    </td>
-				    <td>{order.quantity}</td>
-				    <td className="book-info-button-container">
-					<i className="btn btn-info btn-sm fi fi-rr-shopping-cart-add" data-toggle="tooltip" title="Buy"></i>
-					<i className="btn btn-danger btn-sm fi fi-rr-trash" data-toggle="tooltip" title="Delete"></i>
-				    </td>
-				</tr>
-			    )
-			})
-		    }
-		</tbody>
-	    </table>
+	    {
+		(orders !== undefined && orders.length > 0) ?
+		    <>
+			<OrderContext.Provider value={orders}>
+			    {
+				orders.map((element) => {
+				    return (
+					<Order key={'order-component-' + element.id} order={element}/>
+				    );
+				})
+			    }
+			</OrderContext.Provider>
+		    </>
+		:
+		<>
+		    <div className="mt-5">
+			<div className="w-md-80 w-lg-60 text-center mx-md-auto">
+			    <div className="mb-3">
+				<span className="u-icon u-icon--secondary u-icon--lg rounded-circle mb-4">
+				    <div className="p-5">
+					<h2><i className="rounded-circle bg-primary p-5 fi fi-rr-shopping-cart"></i></h2>
+				    </div>
+				</span>
+				<h1 className="h2">Your cart is currently empty</h1>
+				<p>Before proceed to checkout you must add some products to your shopping cart.</p>
+			    </div>
+			    <a className="btn btn-primary btn-wide" href="/">Start Shopping</a>
+			</div>
+		    </div>
+		</>
+	    }
 	</>
     )
 }
+
+export { OrderContext };
