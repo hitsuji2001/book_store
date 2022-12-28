@@ -17,13 +17,13 @@ export default function AddToCart(props) {
     } = useForm({mode: "onBlur"});
 
     const handleCoverImage = (name) => {
-	if (name !== '' && name !== undefined) return `/api/books/getImage/${name}`;
+	if (name !== '' && name !== undefined) return `${process.env.REACT_APP_PROXY_SERVER}/api/books/getImage/${name}`;
 	else return '../../default-cover.jpg';
     }
 
     const onSubmit = async (data) => {
 	data = {...data, rating: rating}
-	await fetch(`/api/orders/addtocart/${props.user.id}/${props.book.id}`, 
+	await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/orders/addtocart/${props.user.id}/${props.book.id}`, 
 		    { 
 			method: 'POST', 
 			headers: {
@@ -55,7 +55,7 @@ export default function AddToCart(props) {
 		    <div className="book-container mb-3">
 			<h4><i className="text-truncate fi fi-rr-book-bookmark"></i> {props.book.title}</h4>
 			<div className="mb-3"><i className="fi fi-rr-book-open-reader"></i> {props.book.author}</div>
-			<img className="preview-img img-thumbnail" src={ handleCoverImage(props.book.cover_image) } alt="Cover's image" />
+			<img className="preview-img img-thumbnail" src={ handleCoverImage(props.book.cover_image) } alt="cover" />
 			{
 			    serverResponse ? 
 				<p className="alert alert-success"><i className="fi fi-rr-cloud-check"></i> {serverResponse}</p>

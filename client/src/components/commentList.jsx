@@ -8,7 +8,7 @@ export default function CommentList(props) {
     useEffect(() => {
 	const id = window.location.href.split('/')[5];
 	const fetchData = async () => {
-	    const data = await fetch(`/api/books/getComments/${id}`);
+	    const data = await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/books/getComments/${id}`);
 	    const json = await data.json();
 	    setComments(json);
 	}

@@ -1,0 +1,49 @@
+version: "3.9"
+services:
+  database:
+    image: "mysql:8.0-debian"
+    container_name: bookstore-database
+    ports:
+      - "3307:3306"
+    volumes:
+      - database_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "library"
+      MYSQL_USER: "admin"
+      MYSQL_PASSWORD: "admin"
+      MYSQL_ROOT_PASSWORD: "secret"
+      MYSQL_ROOT_HOST: "%"
+    restart: unless-stopped
+  bookstore-backend:
+    container_name: bookstore-backend
+    build:
+      context: ../server
+      dockerfile: ./manifest/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      DB_HOST: "database"
+      DB_USER: "admin"
+      DB_PASS: "admin"
+      WEB_PORT: "3001"
+      WEB_HOST: "localhost"
+      DB_SCHEMA: "library"
+    depends_on:
+      - database
+    restart: unless-stopped
+  bookstore-frontend:
+    container_name: bookstore-frontend
+    build:
+      context: ../client
+      dockerfile: ./manifest/Dockerfile
+    environment:
+      REACT_APP_PROXY_SERVER: "http://localhost:3001"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - bookstore-backend
+    restart: unless-stopped
+volumes:
+  database_data:
+    external: false
+    driver: local

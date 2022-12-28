@@ -5,12 +5,13 @@ const path		= require('path');
 const cookieParser	= require('cookie-parser');
 const logger		= require('morgan');
 
-const resetDatabase	= require('./database/createTabels.js');
+const resetDatabase	= require('./database/createTables.js');
 
-const booksRouter	= require('./routes/books.js');
-const usersRouter	= require('./routes/users.js');
-const ordersRouter	= require('./routes/orders.js');
-const commentsRouter	= require('./routes/comments.js');
+const booksRouter		= require('./routes/books.js');
+const usersRouter		= require('./routes/users.js');
+const ordersRouter		= require('./routes/orders.js');
+const commentsRouter		= require('./routes/comments.js');
+const createConnectionRouter	= require('./routes/create-connection.js');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/api/books', booksRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/comments', commentsRouter);
+app.use('/api/connection', createConnectionRouter);
 
 // resetDatabase.reset_database();
 

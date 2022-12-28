@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { UserContext } from './dashboard.jsx';
@@ -8,11 +7,10 @@ import '../css/bookSumary.css';
 
 export default function BookSumary(props) {
     const [ modalShow, setModalShow ] = React.useState(false);
-    const navigate = useNavigate();
     const user = useContext(UserContext);
 
     function handleCoverImage(name) {
-	if (name !== '' && name !== undefined) return `/api/books/getImage/${name}`;
+	if (name !== '' && name !== undefined) return `${process.env.REACT_APP_PROXY_SERVER}/api/books/getImage/${name}`;
 	else return '../../default-cover.jpg';
     }
 
@@ -97,7 +95,7 @@ export default function BookSumary(props) {
 }
 
 async function handleOnDelete(e, id) {
-    await fetch(`/api/books/delete/${id}`)
+    await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/books/delete/${id}`)
 	.then((res) => { 
 	    res.json();
 	    window.location.reload(true);

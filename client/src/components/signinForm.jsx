@@ -12,7 +12,7 @@ export default function SignIn(props) {
 
     const onSubmit = async (data) => {
 	data = {...data, password: btoa(data.password)};
-	await fetch(`/api/users/signin`, 
+	await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/users/signin`, 
 	      { 
 		  method: 'POST', 
 		  headers: {
@@ -93,7 +93,7 @@ export default function SignIn(props) {
 			}
 			
 			<button type="submit" className="btn btn-primary">Sign In</button>
-			<p className="mt-3">Or login <a href="#" onClick={ handleAnonymousLogin }>Anonymously</a></p>
+			<p className="mt-3">Or login <a onClick={ handleAnonymousLogin }>Anonymously</a></p>
 		    </Form>
 		</div>
 	    </div>

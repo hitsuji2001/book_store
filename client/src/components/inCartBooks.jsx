@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Order from './order.jsx';
 
@@ -6,14 +6,13 @@ let OrderContext = createContext();
 export default function InCartBook(props) {
     const [ orders, setOrders ] = useState([]);
     const [ user, setUser ] = useState({});
-    const [ modalShow, setModalShow ] = React.useState(false);
     const navigate = useNavigate();
 
     const loggedInUser = localStorage.getItem('user');
     useEffect(() => {
 	const fetchData = async () => {
 	    let currentUser = JSON.parse(loggedInUser);
-	    const data = await fetch(`/api/orders/getOrders/${currentUser.id}`);
+	    const data = await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/orders/getOrders/${currentUser.id}`);
 	    const json = await data.json();
 	    setOrders(json);
 	}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BookSumary from './bookSumary.jsx';
 import Header from './header.jsx';
@@ -14,7 +14,7 @@ function Dashboard(props) {
 
     useEffect(() => {
 	const fetchData = async () => {
-	    const data = await fetch('/api/books/getAllBooksSumary');
+	    const data = await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/books/getAllBooksSumary`);
 	    const json = await data.json();
 	    setBooks(Array.from(json.books));
 	}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, createContext } from 'react';
+import React, { useEffect, useState, createContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { Form } from 'semantic-ui-react';
@@ -37,7 +37,7 @@ export default function BookDetails(props) {
 	formData.append('image', files[0]);
 	setBook(data);
 
-	await fetch(`/api/books/addBook`, { method: 'POST', body: formData })
+	await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/books/addBook`, { method: 'POST', body: formData })
 	    .then((res) => { 
 		if (res.ok) {
 		    navigate('/');
@@ -53,7 +53,7 @@ export default function BookDetails(props) {
 	formData.append('book', JSON.stringify(data));
 	formData.append('image', files[0]);
 
-	await fetch(`/api/books/editBook/${book.id}`, { method: 'POST', body: formData })
+	await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/books/editBook/${book.id}`, { method: 'POST', body: formData })
 	    .then((res) => { 
 		if (res.ok) {
 		    navigate('/');
@@ -66,7 +66,7 @@ export default function BookDetails(props) {
     useEffect(() => {
 	if (props.action !== 'add') {
 	    const id = window.location.href.split('/')[5];
-	    fetch(`/api/books/getBook/${id}`)
+	    fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/books/getBook/${id}`)
 		.then((res) => res.json())
 		.then((data) => {
 		    setBook(data);
@@ -79,7 +79,7 @@ export default function BookDetails(props) {
     }, []);
 
     const handleCoverImage = (name) => {
-	if (name !== '' && name !== undefined) return `/api/books/getImage/${name}`;
+	if (name !== '' && name !== undefined) return `${process.env.REACT_APP_PROXY_SERVER}/api/books/getImage/${name}`;
 	else return '../../default-cover.jpg';
     }
     
@@ -92,6 +92,13 @@ export default function BookDetails(props) {
 	    actionButton = (
 		<>
 		    <Link to={`/book/edit/${book.id}`}><div className="btn btn-primary m-1">Edit</div></Link>
+		    <div className="btn btn-primary m-1" onClick={() => setModalShow(true)}>Add to cart</div>
+		    <AddToCart
+			show={modalShow}
+			book={book}
+			user={user}
+			onHide={() => setModalShow(false)}
+		    />
 		    <div className="mt-1" onClick={() => setModalDeleteShow(true)}>
 			<div className="btn btn-danger">Delete</div>
 		    </div>
@@ -275,7 +282,7 @@ export default function BookDetails(props) {
 }
 
 async function handleOnDelete(e, id) {
-    await fetch(`/api/books/delete/${id}`)
+    await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/books/delete/${id}`)
 	.then((res) => { 
 	    res.json();
 	    window.location.href = '/';
@@ -283,8 +290,6 @@ async function handleOnDelete(e, id) {
 }
 
 function CenteredModal(props) {
-    const book = useContext(BookContext);
-
     return (
 	<Modal
 	    {...props}

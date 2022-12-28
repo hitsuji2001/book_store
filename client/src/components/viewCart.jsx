@@ -1,8 +1,7 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './header.jsx';
 import InCartBooks from './inCartBooks.jsx';
-import PayedBooks from './payedBooks.jsx';
 
 let UserContext = createContext();
 export default function ViewCart(props) {
@@ -25,7 +24,6 @@ export default function ViewCart(props) {
 	    <div className="list-container content">
 		<UserContext.Provider value={user}>
 		    <InCartBooks user={user}/>
-		    <PayedBooks user={user}/>
 		</UserContext.Provider>
 	    </div>
 	</>

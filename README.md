@@ -8,6 +8,8 @@ Create your `.env` file by making according change to `.your-env` file in server
 
 ### Quick start
 
+## Manual
+
 Go to server folder and run
 
 ```console
@@ -31,6 +33,22 @@ And then run the client by
 ```console 
 $ npm run start
 ```
+
+## Docker Compose
+
+When done cloning, go to `book-store` folder and then run
+
+``` console
+$ cd ./manifest
+$ docker-compose up
+```
+
+Or sometime at the future there will be a docker-hub image to be pulled
+
+Both client and server will run at `localhost`  
+
+- Client port: `3000`
+- Server port: `3001`
 
 ### Login
 

@@ -1,17 +1,13 @@
-import React, { useContext, useState } from 'react';
-import { OrderContext } from './inCartBooks.jsx';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import '../css/order.css';
 
 export default function Order({order}) {
-    const orders = useContext(OrderContext);
     const [modalShow, setModalShow] = React.useState(false);
-    const location = useLocation();
 
     const handleCoverImage = (name) => {
-	if (name !== '' && name !== undefined) return `/api/books/getImage/${name}`;
+	if (name !== '' && name !== undefined) return `${process.env.REACT_APP_PROXY_SERVER}/api/books/getImage/${name}`;
 	else return '../../default-cover.jpg';
     }
 
@@ -55,7 +51,7 @@ export default function Order({order}) {
 }
 
 const handleDeleteOrder = async (id) => {
-    await fetch(`/api/orders/delete/${id}`)
+    await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/orders/delete/${id}`)
 	.then((res) => {
 	    res.json();
 	    window.location.reload(true);
