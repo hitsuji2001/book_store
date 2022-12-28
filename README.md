@@ -35,5 +35,9 @@ $ npm run start
 ### Login
 
 You can create your account if you want. Or login with this account  
-`account:` admin  
-`password:` admin123
+|-------------+----------+-------|
+| username    | password | role  |
+|-------------+----------+-------|
+| admin       |   123456 | admin |
+| hitsuji0501 |   123456 | user  |
+|-------------+----------+-------|

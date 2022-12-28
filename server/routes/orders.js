@@ -22,7 +22,7 @@ router.post('/addtocart/:userid/:bookid', (req, res) => {
 
 router.get('/getOrders/:userid', (req, res) => {
     let userid = req.params.userid;
-    const query = `SELECT o.id, o.quantity, o.status, o.created_at, 
+    const query = `SELECT o.id, o.quantity, o.status, o.book_id, o.created_at, 
                           b.title, b.author, b.category, b.cover_image
                    FROM Orders o, Books b
                    WHERE o.book_id = b.id AND o.user_id = ?`;

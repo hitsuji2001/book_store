@@ -11,6 +11,7 @@ const create_table = async function() {
         category      VARCHAR(255) NOT NULL,
         cover_image   VARCHAR(255),
         status        VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY(id)
     )`;
 
@@ -22,6 +23,7 @@ const create_table = async function() {
         password  VARCHAR(255) NOT NULL,
         email     VARCHAR(255) NOT NULL,
         role      VARCHAR(45),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY(id)
     )`;
 

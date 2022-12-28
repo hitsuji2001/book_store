@@ -8,6 +8,7 @@ import Header from './header.jsx';
 import DragDropZone from './dragDropZone.jsx';
 import AddToCart from './addToCart.jsx';
 import CommentList from './commentList.jsx';
+import CommentBox from './commentBox.jsx';
 import '../css/bookDetails.css';
 
 let BookContext = createContext();
@@ -264,6 +265,7 @@ export default function BookDetails(props) {
 
 		    <hr className="divider"/>
 		    <div className="text-muted mb-3"><i>Comment section</i></div>
+		    <CommentBox book={book} user={user}/>
 		    <CommentList book={book}/>
 
 		</div>

@@ -3,9 +3,8 @@
 }
 
 .book-info-img {
-    width: 64px;
-    height: 64px;
-    margin-right: 2%;
+    width: 100px;
+    height: 100px;
     color: var(--font-color);
 }
 
@@ -25,7 +24,7 @@
 }
 
 .order-left-side {
-    width: 30%;
+    width: 40%;
     display: flex;
 }
 
@@ -36,4 +35,8 @@
 
 .order-quantity {
     display: flex;
+}
+
+.imgimg {
+    margin-right: 2%;
 }

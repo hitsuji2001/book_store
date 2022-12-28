@@ -7,9 +7,10 @@ const logger		= require('morgan');
 
 const resetDatabase	= require('./database/createTabels.js');
 
-const booksRouter	= require('./routes/books');
-const usersRouter	= require('./routes/users');
-const ordersRouter	= require('./routes/orders');
+const booksRouter	= require('./routes/books.js');
+const usersRouter	= require('./routes/users.js');
+const ordersRouter	= require('./routes/orders.js');
+const commentsRouter	= require('./routes/comments.js');
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/books', booksRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/orders', ordersRouter);
+app.use('/api/comments', commentsRouter);
 
 // resetDatabase.reset_database();
 

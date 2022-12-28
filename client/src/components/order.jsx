@@ -19,7 +19,9 @@ export default function Order({order}) {
 	<>
 	    <div className="order-container border rounded-3 p-2 m-3">
 		<div className="order-left-side">
-		    <img className="book-info-img img-thumbnail" src={ handleCoverImage(order.cover_image) } alt="Book's Cover"/>
+		    <a href={'/book/view/' + order.book_id} className="imgimg">
+			<img className="book-info-img img-thumbnail" src={ handleCoverImage(order.cover_image) } alt="Book's Cover"/> 
+		    </a>
 		    <div>
 			<div>{order.title}</div>
 			<div className="book-info-second-line">

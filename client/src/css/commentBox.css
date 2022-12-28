@@ -1,0 +1,8 @@
+.comment-form-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-comment-section {
+    width: 65%;
+}

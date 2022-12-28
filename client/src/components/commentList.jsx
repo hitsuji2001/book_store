@@ -33,9 +33,10 @@ export default function CommentList(props) {
 			    </div>
 
 			    <div className="comment-right-side">
-				{ comment.rating !== 0 ? 
-				    <Rate disabled={true} rating={comment.rating}/>
-				  : <></>
+				{
+				    comment.rating !== 0 && comment.rating !== null ? 
+					<Rate disabled={true} rating={comment.rating}/>
+				    : <></>
 				}
 				<div className="comment-right-side-text">
 				    <span>{new Date(comment.created_at).toLocaleDateString()}</span>
