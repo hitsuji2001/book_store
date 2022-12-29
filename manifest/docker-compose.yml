@@ -29,6 +29,7 @@ services:
       DB_PASS: "admin"
       DB_PORT: "3306"
       DB_SCHEMA: "library"
+      PORT: "3000"
     depends_on:
       - database
     restart: unless-stopped

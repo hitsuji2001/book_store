@@ -2,6 +2,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: bookstore-db-pv
+  namespace: bookstore
   labels:
     type: local
 spec:
@@ -10,7 +11,7 @@ spec:
     name: bookstore-db-pvc
     namespace: bookstore
   capacity:
-    storage: 2Gi
+    storage: 500Mi
   accessModes:
     - ReadWriteMany
   hostPath: 
@@ -20,6 +21,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: bookstore-be-pv
+  namespace: bookstore
   labels:
     type: local
 spec:
@@ -28,7 +30,7 @@ spec:
     name: bookstore-be-pvc
     namespace: bookstore
   capacity:
-    storage: 2Gi
+    storage: 500Mi
   accessModes:
     - ReadWriteMany
   hostPath: 

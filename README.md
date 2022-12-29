@@ -61,9 +61,7 @@ Or just go to the link directly, And then you can go to your website
 
 You can create your account if you want. Or login with this account  
 
-|-------------|----------|-------|
 | username    | password | role  |
 |-------------|----------|-------|
 | admin       |   123456 | admin |
 | hitsuji0501 |   123456 | user  |
-|-------------|----------|-------|

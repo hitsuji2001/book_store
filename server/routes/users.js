@@ -42,4 +42,13 @@ router.post('/signup', (req, res) => {
     })
 })
 
+router.get('/getUser/:userid', (req, res) => {
+    let userid = req.params.userid;
+
+    mysql.query('SELECT username, firstname, lastname, email, created_at FROM Users WHERE id = ?', [userid], (err, rows, fields) => {
+	if (err) throw err;
+	res.json(rows[0]);
+    });
+})
+
 module.exports = router;

@@ -93,7 +93,7 @@ export default function SignIn(props) {
 			}
 			
 			<button type="submit" className="btn btn-primary">Sign In</button>
-			<p className="mt-3">Or login <a onClick={ handleAnonymousLogin }>Anonymously</a></p>
+			<p className="mt-3">Or login <a href="#" onClick={ handleAnonymousLogin }>Anonymously</a></p>
 		    </Form>
 		</div>
 	    </div>
