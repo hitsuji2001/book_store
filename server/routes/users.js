@@ -9,7 +9,6 @@ router.post('/signin', (req, res) => {
     mysql.query(`SELECT * FROM Users WHERE username = ? AND password = ?`, [ user.username, user.password ] , (error, rows, fields) => {
 	if (error) throw error;
 	if (rows.length > 0) {
-	    console.log(rows[0]);
 	    res.status(200).send({ 
 		message: "Success",
 		user: {

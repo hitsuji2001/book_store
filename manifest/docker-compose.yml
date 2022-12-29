@@ -38,8 +38,8 @@ services:
       context: ../client
       dockerfile: ./manifest/Dockerfile
     environment:
-      REACT_APP_PROXY_HOST: "localhost"
-      REACT_APP_PROXY_PORT: "3001"
+      REACT_APP_PROXY_HOST: localhost
+      REACT_APP_PROXY_PORT: 3001
     ports:
       - "3000:3000"
     depends_on:

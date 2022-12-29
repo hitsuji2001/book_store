@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be-depl
+  namespace: bookstore
+  labels:
+    app: be-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: be-depl
+  template:
+    metadata:
+      labels:
+        app: be-depl
+    spec:
+      containers:
+      - name: be-depl
+        image: manifest_bookstore-backend
+        imagePullPolicy: Never
+        volumeMounts:
+          - mountPath: /server/cover_images/
+            name: bookstore-be-pv
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_HOST
+          value: "database"
+        - name: DB_USER
+          value: "admin"
+        - name: DB_PASS
+          value: "admin"
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_SCHEMA
+          value: "library"
+      volumes:
+        - name: bookstore-be-pv
+          persistentVolumeClaim:
+            claimName: bookstore-be-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: be-svc
+spec:
+  selector:
+    app: be-depl
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 3001
+      targetPort: 3000
+      name: http
+

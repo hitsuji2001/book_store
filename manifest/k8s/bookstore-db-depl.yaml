@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-depl
+  namespace: bookstore
+  labels:
+    app: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+      - name: database
+        image: mysql:8.0-debian
+        volumeMounts:
+          - mountPath: "/var/lib/mysql"
+            name: bookstore-db-pv
+        env:
+        - name: MYSQL_USER
+          value: "admin"
+        - name: MYSQL_DATABASE
+          value: 'test'
+        - name: MYSQL_PASSWORD
+          value: "admin"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "secret"
+        - name: MYSQL_ROOT_HOST
+          value: '%'
+      volumes:
+        - name: bookstore-db-pv
+          persistentVolumeClaim:
+            claimName: bookstore-db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-svc
+spec:
+  selector:
+    app: database
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
