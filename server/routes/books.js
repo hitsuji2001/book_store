@@ -44,10 +44,14 @@ router.get('/getAllBooks', (req, res) => {
 
 router.get('/getBook/:bookID', (req, res) => {
     let id = req.params.bookID;
-    mysql.query(`SELECT * FROM Books WHERE id=${id}`, (error, rows, fields) => {
-	if (error) throw error;
-	res.json(rows[0]);
-    });
+    if (id === undefined || id === 'undefined') {
+	res.sendStatus(404);
+    } else {
+	mysql.query(`SELECT * FROM Books WHERE id=${id}`, (error, rows, fields) => {
+	    if (error) throw error;
+	    res.json(rows[0]);
+	});
+    }
 });
 
 router.get('/getImage/:name', (req, res, next) => {
@@ -73,19 +77,27 @@ router.get('/getImage/:name', (req, res, next) => {
 
 router.get('/getBookSumary/:bookID', (req, res) => {
     let id = req.params.bookID;
-    mysql.query(`SELECT title, author, category, cover_image FROM Books WHERE id=${id} AND status != "removed"`, (error, rows, fields) => {
-	if (error) throw error;
-	res.json(rows[0]);
-    });
+    if (id === undefined || id === 'undefined') {
+	res.sendStatus(404);
+    } else {
+	mysql.query(`SELECT title, author, category, cover_image FROM Books WHERE id=${id} AND status != "removed"`, (error, rows, fields) => {
+	    if (error) throw error;
+	    res.json(rows[0]);
+	});
+    }
 });
 
 router.get('/delete/:bookID', (req, res) => {
     let id = req.params.bookID;
-    mysql.query(`UPDATE Books SET status = "removed" WHERE id = ${id}`, (err, res) => {
-	if (err) throw err;
-	console.log("1 record deleted");
-    });
-    res.sendStatus(200);
+    if (id === undefined || id === 'undefined') {
+	res.sendStatus(404);
+    } else {
+	mysql.query(`UPDATE Books SET status = "removed" WHERE id = ${id}`, (err, res) => {
+	    if (err) throw err;
+	    console.log("1 record deleted");
+	});
+	res.sendStatus(200);
+    }
 });
 
 router.post('/addBook', upload.single('image'), (req, res) => {
@@ -115,23 +127,27 @@ router.post('/editBook/:bookid', upload.single('image'), (req, res) => {
 
     let params = Object.values(book);
 
-    mysql.query(`UPDATE Books
-                 SET
-                    title = ?,
-                    author = ?,
-                    description = ?,
-                    release_date = ?,
-                    pages = ?,
-                    category = ?,
-                    cover_image = ?
-                 WHERE
+    if (index === undefined || index === 'undefined') {
+	res.sendStatus(404);
+    } else {
+	mysql.query(`UPDATE Books
+                     SET
+                        title = ?,
+                        author = ?,
+                        description = ?,
+                        release_date = ?,
+                        pages = ?,
+                        category = ?,
+                        cover_image = ?
+                     WHERE
                      id = ${index}`
-		, params, (err, res) => {
-		    if (err) throw err;
-		    console.log(res.affectedRows + " record(s) updated");
-		});
-    
-    res.sendStatus(200);
+		    , params, (err, res) => {
+			if (err) throw err;
+			console.log(res.affectedRows + " record(s) updated");
+		    });
+	
+	res.sendStatus(200);
+    }
 });
 
 router.get('/getComments/:bookid', (req, res) => {
@@ -142,10 +158,14 @@ router.get('/getComments/:bookid', (req, res) => {
                    WHERE c.book_id = ? AND (c.rating != 0 OR (c.text IS NOT NULL AND c.text != ''))
                    GROUP BY c.id`;
 
-    mysql.query(query, [bookid], (err, rows, fields) => {    
-	if (err) throw err;
-	res.json(rows);
-    });
+    if (bookid === undefined || bookid === 'undefined') {
+	res.sendStatus(404);
+    } else {
+	mysql.query(query, [bookid], (err, rows, fields) => {    
+	    if (err) throw err;
+	    res.json(rows);
+	});
+    }
 });
 
 module.exports = router;

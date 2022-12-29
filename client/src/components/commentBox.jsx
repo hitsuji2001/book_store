@@ -28,30 +28,32 @@ export default function CommentBox(props) {
 	    })
     }
 
+    const commentBoxForm = (
+	<Form id="comment-form" onSubmit={ handleCommentSubmit(onSubmit) }>
+	    <Form.Field className="input-group form-comment-section mb-3">
+		<textarea className="form-control"
+			  rows="3"
+			  placeholder="Enter comment here..."
+			  {...commentRegister("comment", {
+			      maxLength: {
+				  value: 1000,
+				  message: "Comment cannot be more than 1000 characters!"
+			      }})
+			  }
+		></textarea>
+	    </Form.Field>
+	    {commentError.comment && <p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> { commentError.comment.message }</p>}
+	    <div className="comment-btn">
+		<input type="submit" form="comment-form" className="btn btn-secondary" value="Comment"/>
+	    </div>	
+	</Form>
+    );
+
     return (
 	<>
-	    <Form id="comment-form" onSubmit={ handleCommentSubmit(onSubmit) }>
-		<Form.Field className="input-group form-comment-section mb-3">
-		    <textarea className="form-control"
-			      rows="3"
-			      placeholder="Enter comment here..."
-			      {...commentRegister("comment", {
-				  maxLength: {
-				      value: 1000,
-				      message: "Comment cannot be more than 1000 characters!"
-				  }})
-			      }
-		    ></textarea>
-		</Form.Field>
-		{commentError.comment && <p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> { commentError.comment.message }</p>}
-		{
-		    props.user.role !== 'none' ?
-			<div className="comment-btn">
-			    <input type="submit" form="comment-form" className="btn btn-secondary" value="Comment"/>
-			</div>	
-			: <></>
-		}
-	    </Form>
+	    {
+		props.user.role !== 'none' ? commentBoxForm : <></>
+	    }
 	</>
     );
 }

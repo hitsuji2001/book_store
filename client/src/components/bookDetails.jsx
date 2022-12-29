@@ -29,7 +29,14 @@ export default function BookDetails(props) {
     });
 
     let user = localStorage.getItem('user');
-    user = JSON.parse(user);
+    if (user) {
+	user = JSON.parse(user);
+    } else {
+	user = {
+	    username: 'anonymous',
+	    role: 'none',
+	}
+    }
 
     const onSubmit = async (data) => {
 	const formData = new FormData();
@@ -139,6 +146,9 @@ export default function BookDetails(props) {
 	} else if (props.action === 'edit'  || props.action === 'add') {
 	    navigate('/');
 	} 
+    } else if (user.role === 'none') {
+	if (book.cover_image !== '') coverImage = <img className="img-thumbnail" src={ handleCoverImage(book.cover_image) } alt="Book's Cover" />;
+	else coverImage = '';
     }
 
     return (
