@@ -35,7 +35,7 @@ function Dashboard(props) {
 	    <Header/>
 	    <div className="dashboard content">
 		{
-		    books.map((element) => {
+		    books.slice(0).reverse().map((element) => {
 			return (
 			    <div key={'temp-div-' + element.id}>
 				<UserContext.Provider key={'usercontext-' + element.id} value={user}>

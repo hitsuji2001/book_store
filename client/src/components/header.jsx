@@ -27,7 +27,7 @@ export default function Header(props) {
     }
 
     let dropDownItems;
-    if (user.role === 'none') {
+    if (user.role === 'none' || user.role === undefined) {
 	dropDownItems = (
 	    <>
 		<Dropdown.Item href="/signin" onClick={ handleOnClick }>Sign In</Dropdown.Item>

@@ -35,7 +35,7 @@ export default function InCartBook(props) {
 		    <>
 			<OrderContext.Provider value={orders}>
 			    {
-				orders.map((element) => {
+				orders.slice(0).reverse().map((element) => {
 				    return (
 					<Order key={'order-component-' + element.id} order={element}/>
 				    );

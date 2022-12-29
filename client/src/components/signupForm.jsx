@@ -59,7 +59,7 @@ export default function SignUp(props) {
 			<Link to={'/signin'}><div className="link-btn btn btn-secondary">Sign In</div></Link>
 			<Link to={'/signup'}><div className="link-btn btn btn-info">Sign Up</div></Link>
 		    </div>
-		    <Form className="form-container" onSubmit={ handleSubmit(onSubmit) }>
+		    <Form className="form-container" id="sign-up-form" onSubmit={ handleSubmit(onSubmit) }>
 			<Form.Field className="input-group mb-3">
 			    <label className="input-group-text">Username</label>
 			    <input type="text"
@@ -170,7 +170,7 @@ export default function SignUp(props) {
 				<p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> {errors.lastname.message}</p>
 			}
 
-			<button type="submit" className="btn btn-primary">Sign Up</button>
+			<button type="submit" form="sign-up-form" className="btn btn-primary">Sign Up</button>
 			<p className="mt-3">Or login <a href="#" onClick={ handleAnonymousLogin }>Anonymously</a></p>
 		    </Form>
 		</div>

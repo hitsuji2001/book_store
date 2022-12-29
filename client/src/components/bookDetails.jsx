@@ -183,7 +183,7 @@ export default function BookDetails(props) {
 				       })}
 				></input>
 			    </Form.Field>
-			    {bookErrors.author && <p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> { bookErrors.author.messages }</p>}
+			    {bookErrors.author && <p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> { bookErrors.author.message }</p>}
 
 			    <Form.Field className="input-group mb-3">
 				<span className="input-group-text">Mô tả</span>

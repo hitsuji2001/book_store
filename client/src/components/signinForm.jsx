@@ -54,7 +54,7 @@ export default function SignIn(props) {
 			<Link to={'/signin'}><div className="link-btn btn btn-info">Sign In</div></Link>
 			<Link to={'/signup'}><div className="link-btn btn btn-secondary">Sign Up</div></Link>
 		    </div>
-		    <Form className="form-container" onSubmit={ handleSubmit(onSubmit) }>
+		    <Form className="form-container" id="sign-in-form" onSubmit={ handleSubmit(onSubmit) }>
 			<Form.Field className="input-group mb-3">
 			    <label className="input-group-text">Username</label>
 			    <input type="text"
@@ -92,7 +92,7 @@ export default function SignIn(props) {
 				<p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> Password is required and must be atleast 6 characters!</p>
 			}
 			
-			<button type="submit" className="btn btn-primary">Sign In</button>
+			<button type="submit" form="sign-in-form" className="btn btn-primary">Sign In</button>
 			<p className="mt-3">Or login <a href="#" onClick={ handleAnonymousLogin }>Anonymously</a></p>
 		    </Form>
 		</div>

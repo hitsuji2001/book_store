@@ -44,9 +44,13 @@ export default function CommentBox(props) {
 		    ></textarea>
 		</Form.Field>
 		{commentError.comment && <p className="error-messages alert alert-danger"><i className="fi fi-rr-exclamation"></i> { commentError.comment.message }</p>}
-		<div className="comment-btn">
-		    <input type="submit" form="comment-form" className="btn btn-secondary" value="Comment"/>
-		</div>	
+		{
+		    props.user.role !== 'none' ?
+			<div className="comment-btn">
+			    <input type="submit" form="comment-form" className="btn btn-secondary" value="Comment"/>
+			</div>	
+			: <></>
+		}
 	    </Form>
 	</>
     );

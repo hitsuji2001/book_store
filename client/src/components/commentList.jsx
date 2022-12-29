@@ -21,7 +21,7 @@ export default function CommentList(props) {
     return(
 	<>
 	    {
-		comments.map((comment) => {
+		comments.slice(0).reverse().map((comment) => {
 		    return (
 			<div key={'comment-container-'+ comment.id} className="comment-container border rounded mb-3">
 			    <div className="comment-left-side">
