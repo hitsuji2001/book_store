@@ -14,7 +14,7 @@ function Dashboard(props) {
 
     useEffect(() => {
 	const fetchData = async () => {
-	    const data = await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/books/getAllBooksSumary`);
+	    const data = await fetch(`http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/books/getAllBooksSumary`);
 	    const json = await data.json();
 	    setBooks(Array.from(json.books));
 	}

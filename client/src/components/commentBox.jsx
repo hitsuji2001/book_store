@@ -14,7 +14,7 @@ export default function CommentBox(props) {
 
     const onSubmit = async (data) => {
 	data = {...data, bookid: props.book.id, userid: props.user.id};
-	await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/comments/commentOn/${props.book.id}/${props.user.id}`,
+	await fetch(`http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/comments/commentOn/${props.book.id}/${props.user.id}`,
 		    { 
 			method: 'POST', 
 			headers: {

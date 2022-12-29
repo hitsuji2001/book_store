@@ -17,13 +17,13 @@ export default function AddToCart(props) {
     } = useForm({mode: "onBlur"});
 
     const handleCoverImage = (name) => {
-	if (name !== '' && name !== undefined) return `${process.env.REACT_APP_PROXY_SERVER}/api/books/getImage/${name}`;
+	if (name !== '' && name !== undefined) return `http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/books/getImage/${name}`;
 	else return '../../default-cover.jpg';
     }
 
     const onSubmit = async (data) => {
 	data = {...data, rating: rating}
-	await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/orders/addtocart/${props.user.id}/${props.book.id}`, 
+	await fetch(`http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/orders/addtocart/${props.user.id}/${props.book.id}`, 
 		    { 
 			method: 'POST', 
 			headers: {

@@ -37,7 +37,7 @@ export default function BookDetails(props) {
 	formData.append('image', files[0]);
 	setBook(data);
 
-	await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/books/addBook`, { method: 'POST', body: formData })
+	await fetch(`http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/books/addBook`, { method: 'POST', body: formData })
 	    .then((res) => { 
 		if (res.ok) {
 		    navigate('/');
@@ -53,7 +53,7 @@ export default function BookDetails(props) {
 	formData.append('book', JSON.stringify(data));
 	formData.append('image', files[0]);
 
-	await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/books/editBook/${book.id}`, { method: 'POST', body: formData })
+	await fetch(`http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/books/editBook/${book.id}`, { method: 'POST', body: formData })
 	    .then((res) => { 
 		if (res.ok) {
 		    navigate('/');
@@ -66,7 +66,7 @@ export default function BookDetails(props) {
     useEffect(() => {
 	if (props.action !== 'add') {
 	    const id = window.location.href.split('/')[5];
-	    fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/books/getBook/${id}`)
+	    fetch(`http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/books/getBook/${id}`)
 		.then((res) => res.json())
 		.then((data) => {
 		    setBook(data);
@@ -79,7 +79,7 @@ export default function BookDetails(props) {
     }, []);
 
     const handleCoverImage = (name) => {
-	if (name !== '' && name !== undefined) return `${process.env.REACT_APP_PROXY_SERVER}/api/books/getImage/${name}`;
+	if (name !== '' && name !== undefined) return `http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/books/getImage/${name}`;
 	else return '../../default-cover.jpg';
     }
     
@@ -282,7 +282,7 @@ export default function BookDetails(props) {
 }
 
 async function handleOnDelete(e, id) {
-    await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/books/delete/${id}`)
+    await fetch(`http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/books/delete/${id}`)
 	.then((res) => { 
 	    res.json();
 	    window.location.href = '/';

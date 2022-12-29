@@ -4,7 +4,7 @@ Bookstore web or something I don't know exactly
 
 ### Before you start
 
-Create your `.env` file by making according change to `.your-env` file in server folder
+Create your `.env` file by making according change to `.your-env` file in `server` and `client` folder
 
 ### Quick start
 
@@ -43,16 +43,24 @@ $ cd ./manifest
 $ docker-compose up
 ```
 
-Or sometime at the future there will be a docker-hub image to be pulled
-
+Or sometime at the future there will be a docker-hub image to be pulled  
 Both client and server will run at `localhost`  
 
 - Client port: `3000`
 - Server port: `3001`
 
+After all the containers are running, run this in terminal
+
+``` console
+$ curl http://localhost:3001/connection/create_table
+```
+
+Or just go to the link directly, And then you can go to your website
+
 ### Login
 
 You can create your account if you want. Or login with this account  
+
 |-------------+----------+-------|
 | username    | password | role  |
 |-------------+----------+-------|

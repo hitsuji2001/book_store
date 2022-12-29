@@ -10,7 +10,7 @@ export default function BookSumary(props) {
     const user = useContext(UserContext);
 
     function handleCoverImage(name) {
-	if (name !== '' && name !== undefined) return `${process.env.REACT_APP_PROXY_SERVER}/api/books/getImage/${name}`;
+	if (name !== '' && name !== undefined) return `http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/books/getImage/${name}`;
 	else return '../../default-cover.jpg';
     }
 
@@ -95,7 +95,7 @@ export default function BookSumary(props) {
 }
 
 async function handleOnDelete(e, id) {
-    await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/books/delete/${id}`)
+    await fetch(`http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/books/delete/${id}`)
 	.then((res) => { 
 	    res.json();
 	    window.location.reload(true);

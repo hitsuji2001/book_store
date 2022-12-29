@@ -7,7 +7,7 @@ export default function Order({order}) {
     const [modalShow, setModalShow] = React.useState(false);
 
     const handleCoverImage = (name) => {
-	if (name !== '' && name !== undefined) return `${process.env.REACT_APP_PROXY_SERVER}/api/books/getImage/${name}`;
+	if (name !== '' && name !== undefined) return `http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/books/getImage/${name}`;
 	else return '../../default-cover.jpg';
     }
 
@@ -51,7 +51,7 @@ export default function Order({order}) {
 }
 
 const handleDeleteOrder = async (id) => {
-    await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/orders/delete/${id}`)
+    await fetch(`http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/orders/delete/${id}`)
 	.then((res) => {
 	    res.json();
 	    window.location.reload(true);

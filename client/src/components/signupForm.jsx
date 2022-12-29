@@ -14,7 +14,7 @@ export default function SignUp(props) {
 	data = {...data, password: btoa(data.password), role: 'user'};
 	delete data['confirm_password'];
 
-	await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/users/signup`, 
+	await fetch(`http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/users/signup`, 
 		    { 
 			method: 'POST', 
 			headers: {

@@ -20,13 +20,14 @@ services:
       context: ../server
       dockerfile: ./manifest/Dockerfile
     ports:
-      - "3001:3001"
+      - "3001:3000"
+    volumes:
+      - cover_images:/server/cover_images
     environment:
       DB_HOST: "database"
       DB_USER: "admin"
       DB_PASS: "admin"
-      WEB_PORT: "3001"
-      WEB_HOST: "localhost"
+      DB_PORT: "3306"
       DB_SCHEMA: "library"
     depends_on:
       - database
@@ -37,7 +38,8 @@ services:
       context: ../client
       dockerfile: ./manifest/Dockerfile
     environment:
-      REACT_APP_PROXY_SERVER: "http://localhost:3001"
+      REACT_APP_PROXY_HOST: "localhost"
+      REACT_APP_PROXY_PORT: "3001"
     ports:
       - "3000:3000"
     depends_on:
@@ -45,5 +47,8 @@ services:
     restart: unless-stopped
 volumes:
   database_data:
+    external: false
+    driver: local
+  cover_images:
     external: false
     driver: local

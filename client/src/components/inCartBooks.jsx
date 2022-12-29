@@ -12,7 +12,7 @@ export default function InCartBook(props) {
     useEffect(() => {
 	const fetchData = async () => {
 	    let currentUser = JSON.parse(loggedInUser);
-	    const data = await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/orders/getOrders/${currentUser.id}`);
+	    const data = await fetch(`http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/orders/getOrders/${currentUser.id}`);
 	    const json = await data.json();
 	    setOrders(json);
 	}

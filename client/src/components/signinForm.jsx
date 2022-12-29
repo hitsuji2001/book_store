@@ -12,7 +12,7 @@ export default function SignIn(props) {
 
     const onSubmit = async (data) => {
 	data = {...data, password: btoa(data.password)};
-	await fetch(`${process.env.REACT_APP_PROXY_SERVER}/api/users/signin`, 
+	await fetch(`http://${process.env.REACT_APP_PROXY_HOST}:${process.env.REACT_APP_PROXY_PORT}/api/users/signin`, 
 	      { 
 		  method: 'POST', 
 		  headers: {
